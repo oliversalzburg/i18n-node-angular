@@ -73,7 +73,7 @@ We also inject the complete translation into the `$rootScope` which allows us to
           var userLanguage = $( "body" ).data( "language" );
           this.userLanguage = userLanguage;
           console.log( "Loading locale '" + userLanguage + "' from server..." );
-          $http.get( "/i18n/" + userLanguage ).success( function( translations ) {
+          $http( { method:"get", url:"/i18n/" + userLanguage, cache:true } ).success( function( translations ) {
             $rootScope.i18n = translations;
           } );
         };
