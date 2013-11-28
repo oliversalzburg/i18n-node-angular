@@ -79,10 +79,12 @@ We also inject the complete translation into the `$rootScope` which allows us to
             var userLanguage = $( "body" ).data( "language" );
             this.userLanguage = userLanguage;
             console.log( "Loading locale '" + userLanguage + "' from server..." );
-            $http( { method:"get", url:"/i18n/" + userLanguage, cache:true } ).success( function( translations ) {
-              $rootScope.i18n = translations;
-              deferred.resolve( $rootScope.i18n );
-            } );
+            $http( { method:"get", url:"/i18n/" + userLanguage, cache:true } )
+              .success( function( translations ) {
+                $rootScope.i18n = translations;
+                deferred.resolve( $rootScope.i18n );
+              } 
+            );
           }
     
           return deferred.promise;
@@ -129,9 +131,13 @@ It is possible that you might invoke `i18n.__` before the translation map was lo
 An example would be:
 
     function MyController( i18n ) {
-        i18n.ensureLocaleIsLoaded().then( function() { console.log( i18n.__( "My translation phrase" ) ); } );
+        i18n.ensureLocaleIsLoaded().then( function() { 
+            console.log( i18n.__( "My translation phrase" ) ); 
+        } );
     }
 
     servicesModule.factory( "MyService", function( i18n ) {
-        i18n.ensureLocaleIsLoaded().then( function() { console.log( i18n.__( "My translation phrase" ) ); } );
+        i18n.ensureLocaleIsLoaded().then( function() { 
+            console.log( i18n.__( "My translation phrase" ) ); 
+        } );
     }
