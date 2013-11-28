@@ -65,20 +65,35 @@ We now create an AngularJS service, named `i18n` with a method to access transla
 
 We also inject the complete translation into the `$rootScope` which allows us to access it directly in any directive template (or wherever we might want to access it) like `{{i18n['My translation phrase']}}`.
 
-    servicesModule.factory( "i18n", function( $rootScope, $http ) {
+    servicesModule.factory( "i18n", function( $rootScope, $http, $q ) {
       var i18nService = function() {
         this.ensureLocaleIsLoaded = function() {
-          // This is the language that was determine to be the desired language for the user.
-          // It was rendered into the HTML document on the server.
-          var userLanguage = $( "body" ).data( "language" );
-          this.userLanguage = userLanguage;
-          console.log( "Loading locale '" + userLanguage + "' from server..." );
-          $http( { method:"get", url:"/i18n/" + userLanguage, cache:true } ).success( function( translations ) {
-            $rootScope.i18n = translations;
-          } );
+          var deferred = $q.defer();
+    
+          if( $rootScope.i18n ) {
+            deferred.resolve( $rootScope.i18n );
+    
+          } else {
+            // This is the language that was determine to be the desired language for the user.
+            // It was rendered into the HTML document on the server.
+            var userLanguage = $( "body" ).data( "language" );
+            this.userLanguage = userLanguage;
+            console.log( "Loading locale '" + userLanguage + "' from server..." );
+            $http( { method:"get", url:"/i18n/" + userLanguage, cache:true } ).success( function( translations ) {
+              $rootScope.i18n = translations;
+              deferred.resolve( $rootScope.i18n );
+            } );
+          }
+    
+          return deferred.promise;
         };
     
         this.__ = function( name ) {
+          if( !$rootScope.i18n ) {
+            console.error( "i18n: Translation map not initialized. Be sure to call i18nService.ensureLocaleIsLoaded before accessing translations with i18n.__!" );
+            return name;
+          }
+    
           var translation = $rootScope.i18n[ name ];
           if( !translation ) {
             translation = name;
@@ -105,3 +120,18 @@ We can now access translations easily, by injecting our `i18n` service.
     }
 
 If a term wasn't translated yet, the service will invoke the `/i18n/locale/phrase` route and cause i18n-node to add it to the translation JSON file.
+
+#### Ensuring the locale was loaded
+It is possible that you might invoke `i18n.__` before the translation map was loaded from the server. This will cause an error message to be written to your console, telling you that you need to call `ensureLocaleIsLoaded`.
+
+`ensureLocaleIsLoaded` returns a promise. So you can simply wrap the call around your use of `i18n.__` or include the call earlier in your load hierarchy. Whatever suits your needs best.
+
+An example would be:
+
+    function MyController( i18n ) {
+        i18n.ensureLocaleIsLoaded().then( function() { console.log( i18n.__( "My translation phrase" ) ); } );
+    }
+
+    servicesModule.factory( "MyService", function( i18n ) {
+        i18n.ensureLocaleIsLoaded().then( function() { console.log( i18n.__( "My translation phrase" ) ); } );
+    }
