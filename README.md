@@ -152,6 +152,6 @@ Alternatively, you can also [make the controller creation wait for the locale to
       when( "/", {
             templateUrl: "/partials/index",
             controller : IndexController,
-            resolve    : { "i18n": function( i18n ) { return i18n.ensureLocaleIsLoaded().promise; } }
+            resolve    : { "i18nData": function( i18n ) { return i18n.ensureLocaleIsLoaded().promise; } }
           } );
 
