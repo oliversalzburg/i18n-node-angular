@@ -68,26 +68,27 @@ We also inject the complete translation into the `$rootScope` which allows us to
     servicesModule.factory( "i18n", function( $rootScope, $http, $q ) {
       var i18nService = function() {
         this.ensureLocaleIsLoaded = function() {
-          var deferred = $q.defer();
+          if( !this.existingPromise ) {
+            this.existingPromise = $q.defer();
+            var deferred = this.existingPromise;
     
-          if( $rootScope.i18n ) {
-            deferred.resolve( $rootScope.i18n );
-    
-          } else {
             // This is the language that was determine to be the desired language for the user.
             // It was rendered into the HTML document on the server.
             var userLanguage = $( "body" ).data( "language" );
             this.userLanguage = userLanguage;
+    
             console.log( "Loading locale '" + userLanguage + "' from server..." );
-            $http( { method:"get", url:"/i18n/" + userLanguage, cache:true } )
-              .success( function( translations ) {
-                $rootScope.i18n = translations;
-                deferred.resolve( $rootScope.i18n );
-              } 
-            );
+            $http( { method:"get", url:"/i18n/" + userLanguage, cache:true } ).success( function( translations ) {
+              $rootScope.i18n = translations;
+              deferred.resolve( $rootScope.i18n );
+            } );
           }
     
-          return deferred.promise;
+          if( $rootScope.i18n ) {
+            this.existingPromise.resolve( $rootScope.i18n );
+          }
+    
+          return this.existingPromise.promise;
         };
     
         this.__ = function( name ) {
