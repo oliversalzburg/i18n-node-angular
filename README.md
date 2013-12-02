@@ -126,6 +126,8 @@ If a term wasn't translated yet, the service will invoke the `/i18n/locale/phras
 #### Ensuring the locale was loaded
 It is possible that you might invoke `i18n.__` before the translation map was loaded from the server. This will cause an error message to be written to your console, telling you that you need to call `ensureLocaleIsLoaded`.
 
+
+##### Locally
 `ensureLocaleIsLoaded` returns a promise. So you can simply wrap the call around your use of `i18n.__` or include the call earlier in your load hierarchy. Whatever suits your needs best.
 
 An example would be:
@@ -141,3 +143,14 @@ An example would be:
             console.log( i18n.__( "My translation phrase" ) ); 
         } );
     }
+
+##### Globally
+Alternatively, you can also [make the controller creation wait for the locale to be loaded](http://stackoverflow.com/questions/16286605/initialize-angularjs-service-with-asynchronous-data). An example of such a configuration with the `i18n` service would be:
+
+    $routeProvider.
+      when( "/", {
+            templateUrl: "/partials/index",
+            controller : IndexController,
+            resolve    : { "i18n": function( i18n ) { return i18n.ensureLocaleIsLoaded().promise; } }
+          } );
+
