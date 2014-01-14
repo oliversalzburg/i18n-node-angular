@@ -102,6 +102,13 @@ We also inject the complete translation into the `$rootScope` which allows us to
             translation = name;
             $http.get( "/i18n/" + this.userLanguage + "/" + name );
           }
+          
+          // If an implementation of vsprintf is loaded and we have additional parameters,
+          // try to perform the substitution and return the result
+          if( arguments.length > 1 && typeof( vsprintf ) == "function" ) {
+            translation = vsprintf( translation, Array.prototype.slice.call( arguments, 1 ) );
+          }
+      
           return translation;
         };
     
