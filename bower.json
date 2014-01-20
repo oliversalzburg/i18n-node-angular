@@ -1,7 +1,7 @@
 {
   "name": "i18n-node-angular",
   "description": "i18n-node for Angular",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/oliversalzburg/i18n-node-angular",
   "authors": [
     "Oliver Salzburg <oliver.salzburg@gmail.com>"
@@ -9,7 +9,12 @@
   "main": "i18n-node-angular.js",
   "license": "MIT",
   "private": false,
+  "ignore": [
+    "**/.*",
+    "bower_components"
+  ],
   "dependencies": {
-    "angular": "~1.2.9"
+    "angular": "~1.2.9",
+    "sprintf-js": "git://github.com/alexei/sprintf.js.git"
   }
 }
