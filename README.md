@@ -63,60 +63,7 @@ The translate route could theoretically be used to dynamically load single trans
 ### Create an AngularJS service to access the translation
 We now create an AngularJS service, named `i18n` with a method to access translations, named `__()`, thus making the usage equivalent to that on the backend.
 
-We also inject the complete translation into the `$rootScope` which allows us to access it directly in any directive template (or wherever we might want to access it) like `{{i18n['My translation phrase']}}`.
-
-    servicesModule.factory( "i18n", function( $rootScope, $http, $q ) {
-      var i18nService = function() {
-        this.ensureLocaleIsLoaded = function() {
-          if( !this.existingPromise ) {
-            this.existingPromise = $q.defer();
-            var deferred = this.existingPromise;
-    
-            // This is the language that was determine to be the desired language for the user.
-            // It was rendered into the HTML document on the server.
-            var userLanguage = $( "body" ).data( "language" );
-            this.userLanguage = userLanguage;
-    
-            console.log( "Loading locale '" + userLanguage + "' from server..." );
-            $http( { method:"get", url:"/i18n/" + userLanguage, cache:true } ).success( function( translations ) {
-              $rootScope.i18n = translations;
-              deferred.resolve( $rootScope.i18n );
-            } );
-          }
-    
-          if( $rootScope.i18n ) {
-            this.existingPromise.resolve( $rootScope.i18n );
-          }
-    
-          return this.existingPromise.promise;
-        };
-    
-        this.__ = function( name ) {
-          if( !$rootScope.i18n ) {
-            console.error( "i18n: Translation map not initialized. Be sure to call i18nService.ensureLocaleIsLoaded before accessing translations with i18n.__!" );
-            return name;
-          }
-    
-          var translation = $rootScope.i18n[ name ];
-          if( !translation ) {
-            translation = name;
-            $http.get( "/i18n/" + this.userLanguage + "/" + name );
-          }
-          
-          // If an implementation of vsprintf is loaded and we have additional parameters,
-          // try to perform the substitution and return the result
-          if( arguments.length > 1 && typeof( vsprintf ) == "function" ) {
-            translation = vsprintf( translation, Array.prototype.slice.call( arguments, 1 ) );
-          }
-      
-          return translation;
-        };
-    
-        this.ensureLocaleIsLoaded();
-      };
-    
-      return new i18nService();
-    } );
+See [`i18n-node-angular.js`](https://github.com/oliversalzburg/i18n-node-angular/blob/master/i18n-node-angular.js) for a complete example.
 
 ### Use the service
 We can now access translations easily, by injecting our `i18n` service.
