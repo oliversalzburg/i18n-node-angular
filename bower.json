@@ -1,0 +1,15 @@
+{
+  "name": "i18n-node-angular",
+  "description": "i18n-node for Angular",
+  "version": "0.1.0",
+  "homepage": "https://github.com/oliversalzburg/i18n-node-angular",
+  "authors": [
+    "Oliver Salzburg <oliver.salzburg@gmail.com>"
+  ],
+  "main": "i18n-node-angular.js",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "angular": "~1.2.9"
+  }
+}
