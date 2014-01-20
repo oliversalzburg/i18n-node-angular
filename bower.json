@@ -1,7 +1,7 @@
 {
   "name": "i18n-node-angular",
   "description": "i18n-node for Angular",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/oliversalzburg/i18n-node-angular",
   "authors": [
     "Oliver Salzburg <oliver.salzburg@gmail.com>"

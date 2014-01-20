@@ -66,10 +66,16 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
       if( !translation ) {
         translation = name;
 
+        // Temporarily store the original string in the translation table
+        // to avoid future lookups causing additional GET requests to the backend.
         $rootScope.i18n[ name ] = translation;
 
+        // Invoke the translation endpoint on the backend to cause the term to be added
+        // to the translation table on the backend.
+        // Additionally, store the returned, translated term in the translation table.
+        // The term is very unlikely to be actually translated now, as it was most
+        // likely previously unknown in the users locale, but, hey.
         $http.get( "/i18n/" + this.userLanguage + "/" + name ).success( function( translated ) {
-          debugger;
           $rootScope.i18n[ name ] = translated;
         } );
       }
@@ -89,6 +95,9 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
   return new i18nService();
 } );
 
+/**
+ * i18n filter to be used conveniently in templates.
+ */
 i18nModule.filter( "i18n", [
   "i18n", function( i18n ) {
     return function( input ) {
