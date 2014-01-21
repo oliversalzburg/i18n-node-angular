@@ -39,7 +39,7 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
 
         // This is the language that was determine to be the desired language for the user.
         // It was rendered into the HTML document on the server.
-        var userLanguage = $( "body" ).data( "language" );
+        var userLanguage = angular.element( "body" ).data( "language" );
         this.userLanguage = userLanguage;
 
         console.log( "Loading locale '" + userLanguage + "' from server..." );
