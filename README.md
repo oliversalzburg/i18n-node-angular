@@ -1,4 +1,4 @@
-# Using i18n-node in an AngularJS application
+# i18n-node in an AngularJS application
 
 ## The problem
 I have an application that uses Node and express. I use [i18n-node](https://github.com/mashpie/i18n-node) for internationalization.
@@ -7,7 +7,57 @@ On the frontend, I use AngularJS and I have certain strings (in controllers, ser
 
 ## The solution
 
-### Overview
+### Quick start
+The solution is available in npm and bower packages for the backend and frontend respectively. So you can just... 
+
+1. ...install them with:
+
+        npm install i18n-node-angular
+        bower install i18n-node-angular
+
+2. ...register the express extensions:
+
+        var i18n = require( "i18n" );
+        var i18nRoutes = require( "i18n-node-angular" );
+
+        // The order of these 4 calls matters!
+        app.use( i18n.init );
+        app.use( i18nRoutes.getLocale );
+
+        app.use( app.router );
+        i18nRoutes.configure( app );
+
+3. ...put the locale into the DOM:
+ 
+        body(data-language=i18n.getLocale())
+
+4. ...use the translations in Angular:
+        
+        // Depend on i18n module
+        var yourApp = angular.module( "yourApp", [ "ngRoute", "i18n" ] )
+            .config( [ "$routeProvider", function( $routeProvider ) {
+                $routeProvider.
+                    when( "/", {
+                        templateUrl: "/partials/index",
+                        controller : IndexController,
+                        resolve    : {
+                            // Make sure locale was loaded before creating controller 
+                            "i18nData": function( i18n ) { return i18n.ensureLocaleIsLoaded().promise; } 
+                        }
+                      } );
+            } )
+            .factory( "MyService", function( i18n ) {
+                // Use i18n service injected into this service.
+                console.log( i18n.__( "My translation phrase" ) );
+            } );
+
+        function IndexController( i18n ) {
+            // Use i18n service injected into this controller.
+            console.log( i18n.__( "My translation phrase" ) );
+        }
+         
+
+### How it works
 To make this approach work, we have to make several changes to the application at hand. The final setup is as follows:
 
 1. Communicate the locale, which was detected by i18n-node on the backend, to the frontend through the DOM.
@@ -29,10 +79,11 @@ Now we can use that method in our template. In a jade template it would be as si
     body(data-language=acceptedLanguage())
 
 ### Add the required express routes
+**Note:** You can automatically create these routes through [i18n-node-routes.js](https://github.com/oliversalzburg/i18n-node-angular/blob/master/i18n-node-routes.js), which is available through npm (`npm install i18n-node-angular`).
+
 We now define two new routes in our express application. The first route will provide our full i18n-node translation document and the second will translate a single phrase.
 
     module.exports = function( app ) {
-        // Routes
         app.get( "/i18n/:locale",          routes.i18n       );
         app.get( "/i18n/:locale/:phrase",  routes.translate  );
     }
@@ -68,6 +119,8 @@ The translate route could theoretically be used to dynamically load single trans
     };
 
 ### Create an AngularJS service to access the translation
+**Note:** You can automatically create the service (and more) through [i18n-node-angular.js](https://github.com/oliversalzburg/i18n-node-angular/blob/master/i18n-node-angular.js), which is available through bower (`bower install i18n-node-angular`).
+
 We now create an AngularJS service, named `i18n` with a method to access translations, named `__()`, thus making the usage equivalent to that on the backend.
 
 See [`i18n-node-angular.js`](https://github.com/oliversalzburg/i18n-node-angular/blob/master/i18n-node-angular.js) for a complete example.

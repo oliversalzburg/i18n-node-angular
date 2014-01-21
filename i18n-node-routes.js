@@ -49,6 +49,27 @@ var configure = function( app, configObject ) {
   app.get( "/i18n/:locale/:phrase", i18nRoutes.translate );
 };
 
+/**
+ * Middleware to allow retrieval of users locale in the template engine.
+ * @param {Object} request
+ * @param {Object} response
+ * @param {Function} [next]
+ */
+var getLocale = function( request, response, next ) {
+  response.locals.i18n = {
+    getLocale : function() {
+      return i18n.getLocale.apply( request, arguments );
+    }
+  };
+
+  // For backwards compatibility, also define "acceptedLanguage".
+  response.locals.acceptedLanguage = response.locals.i18n.getLocale;
+
+  if( typeof next !== "undefined" ) {
+    next();
+  }
+};
+
 var i18nRoutes =
 {
   /**
@@ -75,3 +96,4 @@ var i18nRoutes =
 };
 
 module.exports.configure = configure;
+module.exports.getLocale = getLocale;
