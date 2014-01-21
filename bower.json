@@ -1,17 +1,19 @@
 {
   "name": "i18n-node-angular",
+  "version": "0.2.0-beta1",
   "description": "i18n-node for Angular",
-  "version": "0.1.2",
+  "main": "i18n-node-angular.js",
   "homepage": "https://github.com/oliversalzburg/i18n-node-angular",
   "authors": [
     "Oliver Salzburg <oliver.salzburg@gmail.com>"
   ],
-  "main": "i18n-node-angular.js",
   "license": "MIT",
   "private": false,
   "ignore": [
     "**/.*",
-    "bower_components"
+    "bower_components",
+    "node_modules",
+    "i18n-node-routes.js"
   ],
   "dependencies": {
     "angular": "~1.2.9",
