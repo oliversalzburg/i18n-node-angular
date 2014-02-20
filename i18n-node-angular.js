@@ -75,7 +75,7 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
         // Additionally, store the returned, translated term in the translation table.
         // The term is very unlikely to be actually translated now, as it was most
         // likely previously unknown in the users locale, but, hey.
-        $http.get( "/i18n/" + this.userLanguage + "/" + name ).success( function( translated ) {
+        $http.get( "/i18n/" + this.userLanguage + "/" + encodeURIComponent( name ) ).success( function( translated ) {
           $rootScope.i18n[ name ] = translated;
         } );
       }
