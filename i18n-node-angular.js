@@ -101,7 +101,7 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
 i18nModule.filter( "i18n", [
   "i18n", function( i18n ) {
     return function( input ) {
-      return i18n.__( input );
+      return i18n.__.apply( i18n, arguments );
     };
   }
 ] );
