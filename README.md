@@ -42,7 +42,7 @@ The solution is available in npm and bower packages for the backend and frontend
                         controller : IndexController,
                         resolve    : {
                             // Make sure locale was loaded before creating controller 
-                            "i18nData": function( i18n ) { return i18n.ensureLocaleIsLoaded().promise; } 
+                            "i18nData": function( i18n ) { return i18n.ensureLocaleIsLoaded(); }
                         }
                       } );
             } )
