@@ -1,6 +1,6 @@
 {
   "name": "i18n-node-angular",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "i18n-node for Angular",
   "main": "i18n-node-angular.js",
   "homepage": "https://github.com/oliversalzburg/i18n-node-angular",
@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "angular": ">=1.2.9",
+    "jquery": "~1.11.0",
     "sprintf-js": "git://github.com/alexei/sprintf.js.git"
   }
 }
