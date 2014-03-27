@@ -45,7 +45,7 @@ The solution is available in npm and bower packages for the backend and frontend
                             "i18nData": function( i18n ) { return i18n.ensureLocaleIsLoaded(); }
                         }
                       } );
-            } )
+            } ] )
             .factory( "MyService", function( i18n ) {
                 // Use i18n service injected into this service.
                 console.log( i18n.__( "My translation phrase" ) );
