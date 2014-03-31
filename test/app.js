@@ -21,8 +21,11 @@ i18nRoutes.configure( app, {directory : __dirname + "/locales/"} );
 app.get( "/", function( req, res ) {
   res.render( "index" );
 } );
+app.get( "/start", function( req, res ) {
+  res.render( __dirname + "/views/start.jade" );
+} );
 app.get( "/i18n-node-angular.js", function( req, res ) {
-  res.sendfile( path.resolve(__dirname + "/../i18n-node-angular.js" )  );
+  res.sendfile( path.resolve( __dirname + "/../i18n-node-angular.js" )  );
 });
 
 var server = app.listen( 3000, function() {

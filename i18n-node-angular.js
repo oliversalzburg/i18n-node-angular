@@ -30,35 +30,61 @@
 
 var i18nModule = angular.module( "i18n", [] );
 
+i18nModule.directive( "i18nInit", [ "i18n", "$rootScope", function( i18n, $rootScope ) {
+  return {
+    restrict : "A",
+    link     : function postLink( scope, element, attributes ) {
+      attributes.$observe( "i18nInit", function( value ) {
+        i18n.init( value );
+      } );
+      $rootScope.$watch( "i18nInit", function localeChanged( newLocale, oldLocale ) {
+        if( !newLocale || newLocale == oldLocale ) return;
+        i18n.init( newLocale );
+      } );
+    }
+  };
+} ] );
+
 i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
   var i18nService = function() {
-    this.ensureLocaleIsLoaded = function() {
-      if( !this.existingPromise ) {
-        this.existingPromise = $q.defer();
-        var deferred = this.existingPromise;
 
-        // This is the language that was determine to be the desired language for the user.
-        // It was rendered into the HTML document on the server.
-        var userLanguage = angular.element( "body" ).data( "language" );
-        this.userLanguage = userLanguage;
+    this._localeLoadedDeferred = $q.defer();
+    this._deferredStack = [];
 
-        console.log( "Loading locale '" + userLanguage + "' from server..." );
-        $http( { method : "get", url : "/i18n/" + userLanguage, cache : true } ).success( function( translations ) {
+    this.loaded = false;
+
+    this.init = function( locale ) {
+      if( locale != this.userLanguage ) {
+        if( this._localeLoadedDeferred ) {
+          this._deferredStack.push( this._localeLoadedDeferred );
+        }
+        this._localeLoadedDeferred = $q.defer();
+        this.loaded = false;
+        this.userLanguage = locale;
+
+        var service = this;
+
+        console.log( "Loading locale '" + locale + "' from server..." );
+        $http( { method : "get", url : "/i18n/" + locale, cache : true } ).success( function( translations ) {
           $rootScope.i18n = translations;
-          deferred.resolve( $rootScope.i18n );
+          service.loaded = true;
+          service._localeLoadedDeferred.resolve( $rootScope.i18n );
+
+          while( service._localeLoadedDeferred.length ) {
+            service._localeLoadedDeferred.pop().resolve($rootScope.i18n);
+          }
         } );
       }
 
-      if( $rootScope.i18n ) {
-        this.existingPromise.resolve( $rootScope.i18n );
-      }
+      return this._localeLoadedDeferred.promise;
+    };
 
-      return this.existingPromise.promise;
+    this.ensureLocaleIsLoaded = function() {
+      return this._localeLoadedDeferred.promise;
     };
 
     this.__ = function( name ) {
       if( !$rootScope.i18n ) {
-        console.error( "i18n: Translation map not initialized. Be sure to call i18nService.ensureLocaleIsLoaded before accessing translations with i18n.__!" );
         return name;
       }
 
@@ -89,7 +115,7 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
       return translation;
     };
 
-    this.ensureLocaleIsLoaded();
+    //this.ensureLocaleIsLoaded();
   };
 
   return new i18nService();
