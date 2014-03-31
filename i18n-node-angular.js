@@ -81,7 +81,6 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
 
         var service = this;
 
-        console.log( "Loading locale '" + locale + "' from server..." );
         $http( { method : "get", url : "/i18n/" + locale, cache : true } ).success( function( translations ) {
           $rootScope.i18n = translations;
           service.loaded = true;
