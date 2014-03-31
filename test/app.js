@@ -13,7 +13,6 @@ i18n.configure( {
                   directory : __dirname + "/locales"
                 } );
 
-//app.use( i18nHelper );
 app.use( i18n.init );
 app.use( i18nRoutes.getLocale );
 i18nRoutes.configure( app, {directory : __dirname + "/locales/"} );
@@ -21,8 +20,8 @@ i18nRoutes.configure( app, {directory : __dirname + "/locales/"} );
 app.get( "/", function( req, res ) {
   res.render( "index" );
 } );
-app.get( "/start", function( req, res ) {
-  res.render( __dirname + "/views/start.jade" );
+app.get( "/examples", function( req, res ) {
+  res.render( __dirname + "/views/examples.jade" );
 } );
 app.get( "/i18n-node-angular.js", function( req, res ) {
   res.sendfile( path.resolve( __dirname + "/../i18n-node-angular.js" )  );

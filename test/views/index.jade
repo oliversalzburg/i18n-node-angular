@@ -23,7 +23,7 @@ html(ng-app="yourApp", i18n-locale=i18n.getLocale())
           .config( [ "$routeProvider", "$locationProvider", function( $routeProvider, $locationProvider ) {
               $routeProvider
                   .when( "/", {
-                      templateUrl : "start",
+                      templateUrl : "examples",
                       controller  : IndexController
                       /* By enabling the resolver below, the i18n service won't be injected into
                          IndexController until the locale has been loaded from the server.
