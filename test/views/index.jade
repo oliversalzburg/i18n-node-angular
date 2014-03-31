@@ -1,0 +1,30 @@
+doctype html
+html(ng-app="yourApp")
+  body(i18n-init=i18n.getLocale())
+    p #{__("Hello World")} {{"Dynamic Text"|i18n}}
+    a(href="/") {{Home|i18n}}
+    a(href="/about") {{About|i18n}}
+    script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js")
+    script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.js")
+    script(src="i18n-node-angular.js")
+
+    script.
+      // Depend on i18n module
+      var yourApp = angular.module( "yourApp", [ "ngRoute", "i18n" ] )
+          .config( [ "$routeProvider", function( $routeProvider ) {
+              $routeProvider.
+                  when( "/", {
+                      /*templateUrl: "/partials/index",*/
+                      controller : IndexController,
+                      "i18nData": function( i18n ) { return i18n.ensureLocaleIsLoaded(); }
+                    } );
+          } ] )
+          .factory( "MyService", function( i18n ) {
+              // Use i18n service injected into this service.
+              console.log( i18n.__( "My translation phrase" ) );
+          } );
+
+      function IndexController( i18n ) {
+          // Use i18n service injected into this controller.
+          console.log( i18n.__( "My translation phrase" ) );
+      }

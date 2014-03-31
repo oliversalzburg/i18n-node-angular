@@ -1,0 +1,12 @@
+{
+  "name": "i18n-node-angular-test",
+  "description": "Test Environment for i18n-node-angular",
+  "author": "Oliver Salzburg",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "~3.4.8",
+    "i18n": "~0.4.1",
+    "i18n-node-angular": "*",
+    "jade": "^1.3.0"
+  }
+}
