@@ -30,14 +30,24 @@
 
 var i18nModule = angular.module( "i18n", [] );
 
-i18nModule.directive( "i18nInit", [ "i18n", "$rootScope", function( i18n, $rootScope ) {
+/**
+ * The i18nLocale directive can (and should) be used to tell the i18n service which locale to use.
+ * You may just want to combine it with the ngApp directive in your DOM. For example:
+ *
+ * <html ng-app="yourApp" i18n-locale="de">
+ *
+ * The "de" part should in practice be filled by the result of the i18n.getLocale() call in your express app.
+ */
+i18nModule.directive( "i18nLocale", [ "i18n", "$rootScope", function( i18n, $rootScope ) {
   return {
     restrict : "A",
     link     : function postLink( scope, element, attributes ) {
-      attributes.$observe( "i18nInit", function( value ) {
+      // Observe the value provided to us and re-initialize if it changes.
+      attributes.$observe( "i18nLocale", function( value ) {
         i18n.init( value );
       } );
-      $rootScope.$watch( "i18nInit", function localeChanged( newLocale, oldLocale ) {
+      // Also check if a "i18nLocale" model in the scope changes its value to indicate a desired locale change.
+      $rootScope.$watch( "i18nLocale", function localeChanged( newLocale, oldLocale ) {
         if( !newLocale || newLocale == oldLocale ) return;
         i18n.init( newLocale );
       } );
@@ -45,14 +55,21 @@ i18nModule.directive( "i18nInit", [ "i18n", "$rootScope", function( i18n, $rootS
   };
 } ] );
 
+/**
+ * The main i18n service which handles retrieval of the translation map sends single translation terms to the backend.
+ */
 i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
   var i18nService = function() {
 
+    // We use this deferred to keep track of if the last locale loading request has completed.
     this._localeLoadedDeferred = $q.defer();
+    // If a lot of locale loading is requested, we collect all the promises on this stack so we can later resolve them.
     this._deferredStack = [];
 
+    // A handy boolean that indicates if the currently requested locale was loaded.
     this.loaded = false;
 
+    // Initialize the service with a given locale.
     this.init = function( locale ) {
       if( locale != this.userLanguage ) {
         if( this._localeLoadedDeferred ) {
@@ -79,10 +96,34 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
       return this._localeLoadedDeferred.promise;
     };
 
+    /**
+     * Syntactic sugar. Returns a promise to return the i18n service, once the translation map is loaded.
+     * @returns {defer.promise|*|promise}
+     */
+    this.i18n = function() {
+      var serviceDeferred = $q.defer();
+
+      var service = this;
+      this.ensureLocaleIsLoaded().then( function(){
+        serviceDeferred.resolve( service );
+      } );
+
+      return serviceDeferred.promise;
+    };
+
+    /**
+     * Returns a promise to return the translation map, once it is loaded.
+     * @returns {defer.promise|*|promise}
+     */
     this.ensureLocaleIsLoaded = function() {
       return this._localeLoadedDeferred.promise;
     };
 
+    /**
+     * Translate a given term, using the currently loaded translation map.
+     * @param {String} name The string to translate.
+     * @returns {String} The translated string or the input, if no translation was available.
+     */
     this.__ = function( name ) {
       if( !$rootScope.i18n ) {
         return name;
@@ -114,8 +155,6 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
 
       return translation;
     };
-
-    //this.ensureLocaleIsLoaded();
   };
 
   return new i18nService();
