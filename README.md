@@ -12,50 +12,81 @@ The solution is available in npm and bower packages for the backend and frontend
 
 1. ...install them with:
 
-        npm install i18n-node-angular
-        bower install i18n-node-angular
+	```shell
+    npm install i18n-node-angular
+    bower install i18n-node-angular
+	```
 
 2. ...register the express extensions:
 
-        var i18n = require( "i18n" );
-        var i18nRoutes = require( "i18n-node-angular" );
+	```javascript
+    var i18n = require( "i18n" );
+    var i18nRoutes = require( "i18n-node-angular" );
 
-        // The order of these 4 calls matters!
-        app.use( i18n.init );
-        app.use( i18nRoutes.getLocale );
+    // The order of these calls matters!
+    app.use( i18n.init );
+    app.use( i18nRoutes.getLocale );
 
-        app.use( app.router );
-        i18nRoutes.configure( app );
+    // This line should be removed with express 4.0
+    app.use( app.router );
+    i18nRoutes.configure( app );
+	```
 
-3. ...put the locale into the DOM:
+3. ...put the locale into the DOM (this is using [jade](http://jade-lang.com/)):
  
-        body(data-language=i18n.getLocale())
+	```jade
+    html( ng-app="yourApp", i18n-locale=i18n.getLocale() )
+	```
 
 4. ...use the translations in Angular:
         
-        // Depend on i18n module
-        var yourApp = angular.module( "yourApp", [ "ngRoute", "i18n" ] )
-            .config( [ "$routeProvider", function( $routeProvider ) {
-                $routeProvider.
-                    when( "/", {
-                        templateUrl: "/partials/index",
-                        controller : IndexController,
-                        resolve    : {
-                            // Make sure locale was loaded before creating controller 
-                            "i18nData": function( i18n ) { return i18n.ensureLocaleIsLoaded(); }
-                        }
-                      } );
-            } ] )
-            .factory( "MyService", function( i18n ) {
-                // Use i18n service injected into this service.
-                console.log( i18n.__( "My translation phrase" ) );
-            } );
+	```javascript
+	// Depend on i18n module
+	var yourApp = angular.module( "yourApp", [ "ngRoute", "i18n" ] )
+	  .config( [ "$routeProvider", "$locationProvider", function( $routeProvider, $locationProvider ) {
+	             $routeProvider
+	               .when( "/", {
+	                        templateUrl : "examples",
+	                        controller  : IndexController
+	                        /* By enabling the resolver below, the i18n service won't be injected into
+	                         IndexController until the locale has been loaded from the server.
+	                         To enable the resolver, just remove these two characters ↓
+	                         */                                                       /*
+	                         ,resolve  : {
+	                           i18n    : [ "i18n", function( i18n ) { return i18n.i18n(); } ]
+	                         }
+	                         //*/
+	                      } );
+	             $locationProvider.html5Mode( true );
+	           } ] )
+	  .factory( "MyService", function( i18n ) {
+	              // Use i18n service injected into this service.
+	              console.log( i18n.__( "My translation phrase" ) );
+	            } )
+	  .controller( "IndexController", [ "i18n", "$scope", IndexController ] );
+	
+	function IndexController( i18n, $scope ) {
+	  // Inject the service into the scope, so we can access __() and 'loaded'.
+	  $scope.i18n = i18n;
+	  // Try to instantly translate a phrase. This can fail, because the locale might not have been loaded yet.
+	  console.log( "Instant: " + i18n.__( "My translation phrase" ) );
+	  i18n.ensureLocaleIsLoaded().then( function() {
+	    // Chaining on the promise returned from ensureLocaleIsLoaded() will make sure the translation is loaded.
+	    console.log( "Insured: " + i18n.__( "My translation phrase" ) );
+	  } );
+	}
+	```
 
-        function IndexController( i18n ) {
-            // Use i18n service injected into this controller.
-            console.log( i18n.__( "My translation phrase" ) );
-        }
-         
+### Core functionality
+1. The users locale must be injected using the `i18n-locale` directive. The value of it is observed, so you can change the locale at any time.
+
+2. If you want to use the i18n service, you'd generally want to use the `i18n.i18n` promise in a  [resolver](http://docs.angularjs.org/api/ngRoute/provider/$routeProvider#when) for your route. This way you don't have to use `ensureLocaleLoaded` all the time.
+
+   In general, if you inject i18n into your controller, you probably want to have `i18n : [ "i18n", function( i18n ) { return i18n.i18n(); } ]` in your resolver. `i18n.i18n` returns a promise to return the service once the locale has been loaded. At that point in time, your controller will be instantiated and have the service injected; ready for you to use.
+
+3. In your view, pass your translateable string through the `i18n` filter. This will cause items to be automatically re-translated if the locale changes.
+
+   If you want to hide something until the translation is loaded, inject the i18n service into your scope and use `i18n.loaded` with [`ngShow`](http://docs.angularjs.org/api/ng/directive/ngShow).
 
 ### How it works
 To make this approach work, we have to make several changes to the application at hand. The final setup is as follows:
@@ -176,6 +207,6 @@ Alternatively, you can also [make the controller creation wait for the locale to
       when( "/", {
             templateUrl: "/partials/index",
             controller : IndexController,
-            resolve    : { "i18nData": function( i18n ) { return i18n.ensureLocaleIsLoaded(); } }
+            resolve    : { i18n : [ "i18n", function( i18n ) { return i18n.i18n(); } ] }
           } );
 
