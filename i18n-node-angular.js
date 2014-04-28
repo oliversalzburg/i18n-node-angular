@@ -86,8 +86,8 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
           service.loaded = true;
           service._localeLoadedDeferred.resolve( $rootScope.i18n );
 
-          while( service._localeLoadedDeferred.length ) {
-            service._localeLoadedDeferred.pop().resolve($rootScope.i18n);
+          while( service._deferredStack.length ) {
+            service._deferredStack.pop().resolve( $rootScope.i18n );
           }
         } );
       }
@@ -103,7 +103,7 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
       var serviceDeferred = $q.defer();
 
       var service = this;
-      this.ensureLocaleIsLoaded().then( function(){
+      this.ensureLocaleIsLoaded().then( function() {
         serviceDeferred.resolve( service );
       } );
 
