@@ -155,6 +155,13 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
       return translation;
     };
 
+    /**
+     * Translate a given term and pick the singular or plural version depending on the given count.
+     * @param {Number} count The number of items, depending on which the correct translation term will be chosen.
+     * @param {String} singular The term that should be used if the count equals 1.
+     * @param {String} plural The term that should be used if the count doesn't equal 1.
+     * @returns {String} The translated phrase depending on the count.
+     */
     this.__n = function( count, singular, plural ) {
       if( !$rootScope.i18n ) {
         return singular;
@@ -194,6 +201,14 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
 
 /**
  * i18n filter to be used conveniently in templates.
+ * When looking to translate just a single phrase, pass the phrase into the filter like so:
+ *
+ *   {{"My phrase"|i18n}}
+ *
+ * When you need pluralization support, pass the count into the filter, and provide the two terms as additional arguments:
+ *
+ *   {{2|i18n:"singular":"plural"}}
+ *   {{4|i18n:"%s item":"%s items"}}
  */
 i18nModule.filter( "i18n", [
   "i18n", function( i18n ) {
