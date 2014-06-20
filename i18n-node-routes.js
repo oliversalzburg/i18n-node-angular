@@ -95,8 +95,11 @@ var i18nRoutes =
     if( request.query.plural ) {
       var singular = phrase;
       var plural = request.query.plural;
-      var count = request.query.count;
-      result = i18n.__n( {singular : singular, plural : plural, count : count, locale : locale} );
+      // Make sure the information is added to the catalog if it doesn't exist yet.
+      i18n.__n( {singular : singular, plural : plural, locale : locale} );
+      // Retrieve the translation object from the catalog and return it.
+      var catalog = i18n.getCatalog(locale);
+      result = catalog[singular];
 
     } else {
       result = i18n.__( {phrase : phrase, locale : locale} );
