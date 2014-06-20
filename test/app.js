@@ -23,6 +23,9 @@ app.get( "/", function( req, res ) {
 app.get( "/examples", function( req, res ) {
   res.render( __dirname + "/views/examples.jade" );
 } );
+app.get( "/sprintf.js", function( req, res ) {
+  res.sendfile( path.resolve( __dirname + "/../bower_components/sprintf-js/src/sprintf.js" )  );
+});
 app.get( "/i18n-node-angular.js", function( req, res ) {
   res.sendfile( path.resolve( __dirname + "/../i18n-node-angular.js" )  );
 });
