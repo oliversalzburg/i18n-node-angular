@@ -90,7 +90,17 @@ var i18nRoutes =
   translate : function( request, response ) {
     var locale = request.params.locale;
     var phrase = request.params.phrase;
-    var result = i18n.__( {phrase : phrase, locale : locale} );
+
+    var result;
+    if( request.query.plural ) {
+      var singular = phrase;
+      var plural = request.query.plural;
+      var count = request.query.count;
+      result = i18n.__n( {singular : singular, plural : plural, count : count, locale : locale} );
+
+    } else {
+      result = i18n.__( {phrase : phrase, locale : locale} );
+    }
     response.send( result );
   }
 };
