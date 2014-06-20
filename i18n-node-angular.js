@@ -147,9 +147,42 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
       }
 
       // If an implementation of vsprintf is loaded and we have additional parameters,
-      // try to perform the substitution and return the result
+      // try to perform the substitution and return the result.
       if( arguments.length > 1 && typeof( vsprintf ) == "function" ) {
         translation = vsprintf( translation, Array.prototype.slice.call( arguments, 1 ) );
+      }
+
+      return translation;
+    };
+
+    this.__n = function( count, singular, plural ) {
+      if( !$rootScope.i18n ) {
+        return singular;
+      }
+
+      var translation = $rootScope.i18n[ singular ];
+      if( !translation ) {
+        translation = singular;
+
+        // Temporarily store the original string in the translation table
+        // to avoid future lookups causing additional GET requests to the backend.
+        $rootScope.i18n[ singular ] = translation;
+
+        // Invoke the translation endpoint on the backend to cause the term to be added
+        // to the translation table on the backend.
+        // Additionally, store the returned, translated term in the translation table.
+        // The term is very unlikely to be actually translated now, as it was most
+        // likely previously unknown in the users locale, but, hey.
+        $http.get( "/i18n/" + this.userLanguage + "/" + encodeURIComponent( singular ) + "?plural=" + encodeURIComponent( plural ) + "?count=" + encodeURIComponent( count ) ).success( function( translated ) {
+          $rootScope.i18n[ singular ] = translated;
+        } );
+      }
+
+      translation = (count == 1) ? translation.one : translation.other;
+
+      // If an implementation of vsprintf is loaded, try to perform the substitution and return the result.
+      if( typeof( vsprintf ) == "function" ) {
+        translation = vsprintf( translation, [count] );
       }
 
       return translation;
@@ -164,7 +197,21 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
  */
 i18nModule.filter( "i18n", [
   "i18n", function( i18n ) {
+    /**
+     * Check if the given input is a number.
+     * @see http://stackoverflow.com/a/1830844/259953
+     * @param n The input to check.
+     * @returns {boolean} true if the input is a number; false otherwise.
+     */
+    function isNumber( n ) {
+      return !isNaN( parseFloat( n ) ) && isFinite( n );
+    }
+
     return function( input ) {
+      // If the input is a number, assume pluralization is requested.
+      if( isNumber( input ) ) {
+        return i18n.__n.apply( i18n, arguments );
+      }
       return i18n.__.apply( i18n, arguments );
     };
   }
