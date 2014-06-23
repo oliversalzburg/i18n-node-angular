@@ -19,7 +19,7 @@
     "angular"
   ],
   "dependencies": {
-    "i18n": "~0.4.1"
+    "i18n": ">=0.4.1"
   },
   "devDependencies": {
     "grunt": ">= 0.4.4",
