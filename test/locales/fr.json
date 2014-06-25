@@ -1,0 +1,15 @@
+{
+  "This string is translated on the server side.": "Cette chaîne est traduite sur le côté serveur.",
+  "Pluralization": "Pluralisation",
+  "These strings are translated on the server side.": "Ces chaînes sont traduites sur le côté serveur.",
+  "%s cat": {
+    "one": "%s chat",
+    "other": "%s chats"
+  },
+  "My translation phrase": "Ma traduction phrase",
+  "Home": "Maison",
+  "This string is dynamically translated on the client side, using the i18n Angular filter.": "Cette chaîne est dynamique traduit sur ​​le côté client, en utilisant le filtre angulaire i18n.",
+  "You can also translate through i18n.__() and wait for a scope digest!": "Vous pouvez également traduire par i18n.__ () et attendre une portée digérer!",
+  "This text appears when the locale has been loaded.": "Ce texte apparaît lorsque les paramètres régionaux a été chargé.",
+  "These strings are dynamically translated on the client side, using the i18n Angular filter.": "Ces chaînes sont traduites dynamiquement sur le côté client, en utilisant le filtre angulaire i18n."
+}

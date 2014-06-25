@@ -10,6 +10,9 @@ html(ng-app="yourApp", i18n-locale=i18n.getLocale())
       li
         code
           a(ng-click="i18nLocale = 'de'", href="#") Force client-side locale: de
+      li
+        code
+          a(ng-click="i18nLocale = 'fr'", href="#") Force client-side locale: fr
 
     div(ng-view, role="main")
 
