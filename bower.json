@@ -17,6 +17,6 @@
   ],
   "dependencies": {
     "angular": ">=1.2.9",
-    "sprintf-js": "git://github.com/alexei/sprintf.js.git"
+    "sprintf": "^1.0.0"
   }
 }
