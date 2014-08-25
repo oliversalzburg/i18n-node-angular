@@ -1,5 +1,16 @@
 p #{__("This string is translated on the server side.")}
-p {{"This Text is dynamically translated on the client side, using an Angular filter."|i18n}}
+p {{"This string is dynamically translated on the client side, using the i18n Angular filter."|i18n}}
 // Access to i18n.__ and i18n.loaded requires that the service was injected into the scope!
 p {{i18n.__("You can also translate through i18n.__() and wait for a scope digest!")}}
 p(ng-show="i18n.loaded") {{"This text appears when the locale has been loaded."|i18n}}
+
+h3 #{__("Pluralization")}
+p #{__("These strings are translated on the server side.")}
+  ul
+    li #{__n("%s cat", "%s cats", 1)}
+    li #{__n("%s cat", "%s cats", 2)}
+
+p {{"These strings are dynamically translated on the client side, using the i18n Angular filter."|i18n}}
+  ul
+    li {{1|i18n:"%s cat":"%s cats"}}
+    li {{2|i18n:"%s cat":"%s cats"}}

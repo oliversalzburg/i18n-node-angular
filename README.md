@@ -84,7 +84,9 @@ The solution is available in npm and bower packages for the backend and frontend
 
    In general, if you inject i18n into your controller, you probably want to have `i18n : [ "i18n", function( i18n ) { return i18n.i18n(); } ]` in your resolver. `i18n.i18n` returns a promise to return the service once the locale has been loaded. At that point in time, your controller will be instantiated and have the service injected; ready for you to use.
 
-3. In your view, pass your translateable string through the `i18n` filter. This will cause items to be automatically re-translated if the locale changes.
+3. In your view, pass your translatable string through the `i18n` filter. This will cause items to be automatically re-translated if the locale changes.
+
+   If you want to use pluralization, pass the count into the `i18n` filter and supply the singular and plural terms as additional arguments, like `{{2|i18n:"%s cat":"%s cats"}}`.
 
    If you want to hide something until the translation is loaded, inject the i18n service into your scope and use `i18n.loaded` with [`ngShow`](http://docs.angularjs.org/api/ng/directive/ngShow).
 
