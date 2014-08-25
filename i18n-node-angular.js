@@ -58,7 +58,7 @@ i18nModule.directive( "i18nLocale", [ "i18n", "$rootScope", function( i18n, $roo
 /**
  * The main i18n service which handles retrieval of the translation map sends single translation terms to the backend.
  */
-i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
+i18nModule.factory( "i18n", [ "$rootScope", "$http", "$q", function( $rootScope, $http, $q ) {
   var i18nService = function() {
 
     // We use this deferred to keep track of if the last locale loading request has completed.
@@ -157,7 +157,7 @@ i18nModule.factory( "i18n", function( $rootScope, $http, $q ) {
   };
 
   return new i18nService();
-} );
+} ] );
 
 /**
  * i18n filter to be used conveniently in templates.
