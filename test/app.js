@@ -8,28 +8,28 @@ app.set( "view engine", "jade" );
 app.set( "views", __dirname + "/views" );
 
 i18n.configure( {
-                  // setup some locales - other locales default to en silently
-                  locales   : ["en", "de"],
-                  directory : __dirname + "/locales"
-                } );
+	// setup some locales - other locales default to en silently
+	locales   : [ "en", "de" ],
+	directory : __dirname + "/locales"
+} );
 
 app.use( i18n.init );
 app.use( i18nRoutes.getLocale );
-i18nRoutes.configure( app, {directory : __dirname + "/locales/"} );
+i18nRoutes.configure( app, { directory : __dirname + "/locales/" } );
 
 app.get( "/", function( req, res ) {
-  res.render( "index" );
+	res.render( "index" );
 } );
 app.get( "/examples", function( req, res ) {
-  res.render( __dirname + "/views/examples.jade" );
+	res.render( __dirname + "/views/examples.jade" );
 } );
 app.get( "/sprintf.js", function( req, res ) {
-  res.sendfile( path.resolve( __dirname + "/../bower_components/sprintf-js/src/sprintf.js" )  );
-});
+	res.sendfile( path.resolve( __dirname + "/../bower_components/sprintf-js/src/sprintf.js" ) );
+} );
 app.get( "/i18n-node-angular.js", function( req, res ) {
-  res.sendfile( path.resolve( __dirname + "/../i18n-node-angular.js" )  );
-});
+	res.sendfile( path.resolve( __dirname + "/../i18n-node-angular.js" ) );
+} );
 
 var server = app.listen( 3000, function() {
-  console.log( "Listening on port %d", server.address().port );
+	console.log( "Listening on port %d", server.address().port );
 } );

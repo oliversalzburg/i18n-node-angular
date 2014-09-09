@@ -29,8 +29,8 @@
 var i18n = require( "i18n" );
 
 var configuration = {
-  directory : "locales/",
-  extension : ".json"
+	directory : "locales/",
+	extension : ".json"
 };
 
 /**
@@ -39,14 +39,14 @@ var configuration = {
  * @param {Object} [configObject]
  */
 var configure = function( app, configObject ) {
-  if( typeof configObject !== "undefined" ) {
-    configuration.directory = ( typeof configObject.directory === "string" ) ? configObject.directory : configuration.directory;
-    configuration.extension = ( typeof configObject.extension === "string" ) ? configObject.extension : configuration.extension;
-  }
+	if( typeof configObject !== "undefined" ) {
+		configuration.directory = ( typeof configObject.directory === "string" ) ? configObject.directory : configuration.directory;
+		configuration.extension = ( typeof configObject.extension === "string" ) ? configObject.extension : configuration.extension;
+	}
 
-  // Register routes
-  app.get( "/i18n/:locale", i18nRoutes.i18n );
-  app.get( "/i18n/:locale/:phrase", i18nRoutes.translate );
+	// Register routes
+	app.get( "/i18n/:locale", i18nRoutes.i18n );
+	app.get( "/i18n/:locale/:phrase", i18nRoutes.translate );
 };
 
 /**
@@ -56,56 +56,55 @@ var configure = function( app, configObject ) {
  * @param {Function} [next]
  */
 var getLocale = function( request, response, next ) {
-  response.locals.i18n = {
-    getLocale : function() {
-      return i18n.getLocale.apply( request, arguments );
-    }
-  };
+	response.locals.i18n = {
+		getLocale : function() {
+			return i18n.getLocale.apply( request, arguments );
+		}
+	};
 
-  // For backwards compatibility, also define "acceptedLanguage".
-  response.locals.acceptedLanguage = response.locals.i18n.getLocale;
+	// For backwards compatibility, also define "acceptedLanguage".
+	response.locals.acceptedLanguage = response.locals.i18n.getLocale;
 
-  if( typeof next !== "undefined" ) {
-    next();
-  }
+	if( typeof next !== "undefined" ) {
+		next();
+	}
 };
 
-var i18nRoutes =
-{
-  /**
-   * Sends a translation file to the client.
-   * @param request
-   * @param response
-   */
-  i18n : function( request, response ) {
-    var locale = request.params.locale;
-    response.sendfile( configuration.directory + locale + configuration.extension );
-  },
+var i18nRoutes = {
+	/**
+	 * Sends a translation file to the client.
+	 * @param request
+	 * @param response
+	 */
+	i18n : function( request, response ) {
+		var locale = request.params.locale;
+		response.sendfile( configuration.directory + locale + configuration.extension );
+	},
 
-  /**
-   * Translate a given string and provide the result.
-   * @param request
-   * @param response
-   */
-  translate : function( request, response ) {
-    var locale = request.params.locale;
-    var phrase = request.params.phrase;
+	/**
+	 * Translate a given string and provide the result.
+	 * @param request
+	 * @param response
+	 */
+	translate : function( request, response ) {
+		var locale = request.params.locale;
+		var phrase = request.params.phrase;
 
-    var result;
-    if( request.query.plural ) {
-      var singular = phrase;
-      var plural = request.query.plural;
-      // Make sure the information is added to the catalog if it doesn't exist yet.
-      i18n.__n( {singular : singular, plural : plural, locale : locale} );
-      // Retrieve the translation object from the catalog and return it.
-      var catalog = i18n.getCatalog(locale);
-      result = catalog[singular];
+		var result;
+		if( request.query.plural ) {
+			var singular = phrase;
+			var plural = request.query.plural;
+			// Make sure the information is added to the catalog if it doesn't exist yet.
+			i18n.__n( { singular : singular, plural : plural, locale : locale } );
+			// Retrieve the translation object from the catalog and return it.
+			var catalog = i18n.getCatalog( locale );
+			result = catalog[ singular ];
 
-    } else {
-      result = i18n.__( {phrase : phrase, locale : locale} );
-    }
-    response.send( result );
-  }
+		} else {
+			result = i18n.__( { phrase : phrase, locale : locale } );
+		}
+		response.send( result );
+	}
 };
 
 module.exports.configure = configure;
