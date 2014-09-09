@@ -174,6 +174,10 @@
 
 				var translation = $rootScope.i18n[ singular ];
 				if( !translation ) {
+					if( !plural ) {
+						plural = singular;
+					}
+
 					translation = { one : singular, other : plural };
 
 					// Temporarily store the original string in the translation table
