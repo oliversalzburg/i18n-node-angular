@@ -27,6 +27,7 @@
  */
 
 var i18n = require( "i18n" );
+var path = require( "path" );
 
 var configuration = {
 	directory : "locales/",
@@ -78,7 +79,7 @@ var i18nRoutes = {
 	 */
 	i18n : function( request, response ) {
 		var locale = request.params.locale;
-		response.sendfile( configuration.directory + locale + configuration.extension );
+		response.sendfile( path.join( configuration.directory, locale + configuration.extension ) );
 	},
 
 	/**
