@@ -130,6 +130,7 @@
 			 */
 			this.getTranslationObject = function( literal ) {
 				var result = literal.split( "." ).reduce( function( object, index ) {
+					if( !object || !object.hasOwnProperty( index ) ) return null;
 					return object[ index ];
 				}, $rootScope.i18n );
 				return result;
