@@ -124,6 +124,19 @@
 			};
 
 			/**
+			 * Retrieve a translation object from the translation catalog, using object notation.
+			 * @param {String} literal The path of the object to look up.
+			 * @returns {*}
+			 */
+			this.getTranslationObject = function( literal ) {
+				var result = literal.split( "." ).reduce( function( object, index ) {
+					if( !object || !object.hasOwnProperty( index ) ) return null;
+					return object[ index ];
+				}, $rootScope.i18n );
+				return result;
+			};
+
+			/**
 			 * Translate a given term, using the currently loaded translation map.
 			 * @param {String} name The string to translate.
 			 * @returns {String} The translated string or the input, if no translation was available.
@@ -133,7 +146,7 @@
 					return name;
 				}
 
-				var translation = $rootScope.i18n[ name ];
+				var translation = $rootScope.i18n[ name ] || this.getTranslationObject( name );
 				if( !translation ) {
 					translation = name;
 
@@ -172,8 +185,12 @@
 					return singular;
 				}
 
-				var translation = $rootScope.i18n[ singular ];
+				var translation = $rootScope.i18n[ singular ] || this.getTranslationObject( name );
 				if( !translation ) {
+					if( !plural ) {
+						plural = singular;
+					}
+
 					translation = { one : singular, other : plural };
 
 					// Temporarily store the original string in the translation table

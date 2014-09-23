@@ -9,8 +9,9 @@ app.set( "views", __dirname + "/views" );
 
 i18n.configure( {
 	// setup some locales - other locales default to en silently
-	locales   : [ "en", "de" ],
-	directory : __dirname + "/locales"
+	locales        : [ "en", "de" ],
+	directory      : __dirname + "/locales",
+	objectNotation : true
 } );
 
 app.use( i18n.init );
