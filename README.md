@@ -90,6 +90,26 @@ The solution is available in npm and bower packages for the backend and frontend
 
    If you want to hide something until the translation is loaded, inject the i18n service into your scope and use `i18n.loaded` with [`ngShow`](http://docs.angularjs.org/api/ng/directive/ngShow).
 
+
+### Object Notation
+If you're using i18n-node's object notation functionality, additional configuration is required if you're using a delimiter other than `.`.
+
+#### Backend
+Provide the delimiter in your `i18nRoutes.configure` call. For example:
+
+    i18nRoutes.configure( app, { directory : path.join( applicationRoot, "locales" ), objectNotation : "→" } );
+
+#### Frontend
+Provide the delimiter in your `angular.module` call, by using the `i18nProvider`. For example:
+
+```javascript
+var yourApp = angular.module( "yourApp", [ "i18n" ] )
+  .config( [ "i18nProvider", function( i18nProvider ) {
+             i18nProvider.setObjectNotation( "→" );
+           } ] );
+```
+
+
 ### How it works
 To make this approach work, we have to make several changes to the application at hand. The final setup is as follows:
 

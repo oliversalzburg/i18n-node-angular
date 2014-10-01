@@ -30,8 +30,9 @@ var i18n = require( "i18n" );
 var path = require( "path" );
 
 var configuration = {
-	directory : "locales/",
-	extension : ".json"
+	directory      : "locales/",
+	extension      : ".json",
+	objectNotation : "."
 };
 
 /**
@@ -41,8 +42,9 @@ var configuration = {
  */
 var configure = function( app, configObject ) {
 	if( typeof configObject !== "undefined" ) {
-		configuration.directory = ( typeof configObject.directory === "string" ) ? configObject.directory : configuration.directory;
-		configuration.extension = ( typeof configObject.extension === "string" ) ? configObject.extension : configuration.extension;
+		configuration.directory = configuration.directory || configObject.directory;
+		configuration.extension = configuration.extension || configObject.extension;
+		configuration.objectNotation = configuration.objectNotation || configObject.objectNotation;
 	}
 
 	// Register routes
@@ -104,7 +106,7 @@ var i18nRoutes = {
 			} );
 			// Retrieve the translation object from the catalog and return it.
 			var catalog = i18n.getCatalog( locale );
-			result = singular.split( "." ).reduce( function( object, index ) {
+			result = singular.split( configuration.objectNotation ).reduce( function( object, index ) {
 				return object[ index ];
 			}, catalog );
 
