@@ -1,6 +1,6 @@
 var express = require( "express" );
 var i18n = require( "i18n" );
-var i18nRoutes = require( "i18n-node-angular" );
+var i18nRoutes = require( "../i18n-node-routes.js" );
 var path = require( "path" );
 
 var app = express();
