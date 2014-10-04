@@ -42,9 +42,9 @@ var configuration = {
  */
 var configure = function( app, configObject ) {
 	if( typeof configObject !== "undefined" ) {
-		configuration.directory = configuration.directory || configObject.directory;
-		configuration.extension = configuration.extension || configObject.extension;
-		configuration.objectNotation = configuration.objectNotation || configObject.objectNotation;
+		configuration.directory = configObject.directory || configuration.directory;
+		configuration.extension = configObject.extension || configuration.extension;
+		configuration.objectNotation = configObject.objectNotation || configuration.objectNotation;
 	}
 
 	// Register routes
