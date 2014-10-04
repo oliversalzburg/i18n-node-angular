@@ -30,6 +30,9 @@ app.get( "/sprintf.js", function( req, res ) {
 app.get( "/i18n-node-angular.js", function( req, res ) {
 	res.sendfile( path.resolve( __dirname + "/../i18n-node-angular.js" ) );
 } );
+app.get( "/demo.js", function( req, res ) {
+	res.sendfile( path.resolve( __dirname + "/demo.js" ) );
+} );
 
 var server = app.listen( 3000, function() {
 	console.log( "Listening on port %d", server.address().port );
