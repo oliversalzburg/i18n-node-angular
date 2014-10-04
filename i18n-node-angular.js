@@ -168,7 +168,7 @@
 						return singular;
 					}
 
-					var translation = $rootScope.i18n[ singular ] || this.getTranslationObject( name );
+					var translation = $rootScope.i18n[ singular ] || this.getTranslationObject( singular );
 					if( !translation ) {
 						if( !plural ) {
 							plural = singular;
