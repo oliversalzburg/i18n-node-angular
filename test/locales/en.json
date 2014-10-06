@@ -12,12 +12,7 @@
 	"You can also translate through i18n.__() and wait for a scope digest!": "You can also translate through i18n.__() and wait for a scope digest!",
 	"This text appears when the locale has been loaded.": "This text appears when the locale has been loaded.",
 	"These strings are dynamically translated on the client side, using the i18n Angular filter.": "These strings are dynamically translated on the client side, using the i18n Angular filter.",
-	"This string is translated on the server side": {
-		"": "This string is translated on the server side."
-	},
-	"These strings are translated on the server side": {
-		"": "These strings are translated on the server side."
-	},
+	"These strings are dynamically translated on the client side, using the i18n Angular directive.": "These strings are dynamically translated on the client side, using the i18n Angular directive.",
 	"objectnotation": {
 		"introduction": "These strings are accessed through object notation.",
 		"cat": {

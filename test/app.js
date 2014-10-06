@@ -1,6 +1,6 @@
 var express = require( "express" );
 var i18n = require( "i18n" );
-var i18nRoutes = require( "i18n-node-angular" );
+var i18nRoutes = require( "../i18n-node-routes.js" );
 var path = require( "path" );
 
 var app = express();
@@ -29,6 +29,9 @@ app.get( "/sprintf.js", function( req, res ) {
 } );
 app.get( "/i18n-node-angular.js", function( req, res ) {
 	res.sendfile( path.resolve( __dirname + "/../i18n-node-angular.js" ) );
+} );
+app.get( "/demo.js", function( req, res ) {
+	res.sendfile( path.resolve( __dirname + "/demo.js" ) );
 } );
 
 var server = app.listen( 3000, function() {

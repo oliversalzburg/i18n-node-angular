@@ -185,7 +185,17 @@
 						// Additionally, store the returned, translated term in the translation table.
 						// The term is very unlikely to be actually translated now, as it was most
 						// likely previously unknown in the users locale, but, hey.
-						$http.get( "/i18n/" + this.userLanguage + "/" + encodeURIComponent( singular ) + "?plural=" + encodeURIComponent( plural ) + "&count=" + encodeURIComponent( count ) ).success( function( translated ) {
+						var requestUri =
+							"/i18n/" +
+							this.userLanguage +
+							"/" +
+							encodeURIComponent( singular ) +
+							"?plural=" +
+							encodeURIComponent( plural ) +
+							"&count=" +
+							encodeURIComponent( count );
+
+						$http.get( requestUri ).success( function( translated ) {
 							$rootScope.i18n[ singular ] = translated;
 						} );
 					}
