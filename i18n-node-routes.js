@@ -81,7 +81,8 @@ var i18nRoutes = {
 	 */
 	i18n : function( request, response ) {
 		var locale = request.params.locale;
-		response.sendfile( path.join( configuration.directory, locale + configuration.extension ) );
+		var sendFile = response.sendFile || response.sendfile;
+		sendFile.apply( response, [ path.join( configuration.directory, locale + configuration.extension ) ] );
 	},
 
 	/**
