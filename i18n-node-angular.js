@@ -77,6 +77,8 @@
 							while( service._deferredStack.length ) {
 								service._deferredStack.pop().resolve( $rootScope.i18n );
 							}
+
+							$rootScope.$broadcast( "LOCALE_UPDATED" );
 						} );
 					}
 
@@ -214,6 +216,37 @@
 			return new i18nService();
 		} ];
 	} );
+
+	i18nModule.directive( "i18n", [ "i18n", "$rootScope", function( i18n, $rootScope ) {
+		return {
+			restrict : "A",
+			link     : function postLink( scope, element, attributes ) {
+				function updateText( literal, count ) {
+					literal = literal || attributes[ "i18n" ];
+					count = count || getCount();
+					if( count === undefined ) {
+						element.text( i18n.__( literal ) );
+					} else {
+						element.text( i18n.__n( count, literal ) )
+					}
+				}
+
+				function getCount() {
+					var countAttribute = attributes[ "count" ];
+					return countAttribute && parseInt( countAttribute );
+				}
+
+				// Observe the value provided to us and update if it changes.
+				attributes.$observe( "i18n", function( value ) {
+					updateText( value );
+				} );
+
+				$rootScope.$on( "LOCALE_UPDATED", function() {
+					updateText();
+				} );
+			}
+		};
+	} ] );
 
 	/**
 	 * The i18nLocale directive can (and should) be used to tell the i18n service which locale to use.

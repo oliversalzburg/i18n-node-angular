@@ -15,6 +15,11 @@ p {{"These strings are dynamically translated on the client side, using the i18n
 		li {{1|i18n:"%s cat":"%s cats"}}
 		li {{2|i18n:"%s cat":"%s cats"}}
 
+p(i18n="These strings are dynamically translated on the client side, using the i18n Angular directive.")
+	ul
+		li(i18n="%s cat", count="1")
+		li(i18n="%s cat", count="2")
+
 p {{"objectnotation.introduction"|i18n}}
 	ul
 		li {{1|i18n:"objectnotation.cat"}}
