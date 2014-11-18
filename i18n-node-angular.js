@@ -263,13 +263,15 @@
 				return !isNaN( parseFloat( n ) ) && isFinite( n );
 			}
 
-			return function( input ) {
+			var filter = function( input ) {
 				// If the input is a number, assume pluralization is requested.
 				if( isNumber( input ) ) {
 					return i18n.__n.apply( i18n, arguments );
 				}
 				return i18n.__.apply( i18n, arguments );
 			};
+			filter.$stateful = true;
+			return filter;
 		}
 	] );
 }());
