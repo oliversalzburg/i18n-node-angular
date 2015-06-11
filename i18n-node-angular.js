@@ -79,7 +79,13 @@
 							}
 
 							$rootScope.$broadcast( "LOCALE_UPDATED" );
-						} );
+						} ).error( function( error ) {
+							service._localeLoadedDeferred.reject( error );
+
+							while( service._deferredStack.length ) {
+								service._deferredStack.pop().reject( error );
+							}
+						});
 					}
 
 					return this._localeLoadedDeferred.promise;
