@@ -1,12 +1,14 @@
 {
   "name": "i18n-node-angular",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "express routes for i18n-node-angular",
   "main": "i18n-node-routes.js",
   "homepage": "https://github.com/oliversalzburg/i18n-node-angular",
   "author": "Oliver Salzburg",
   "license": "MIT",
   "files":[
+    "dist",
+    "i18n-node-angular.js",
     "i18n-node-routes.js"
   ],
   "repository": {
