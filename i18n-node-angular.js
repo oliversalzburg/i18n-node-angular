@@ -302,11 +302,11 @@
 				return !isNaN( parseFloat( n ) ) && isFinite( n );
 			}
 
-			if( !arguments ) {
-				return "";
-			}
-
 			var filter = function( input ) {
+				if( !arguments ) {
+					return "";
+				}
+
 				// If the input is a number, assume pluralization is requested.
 				if( isNumber( input ) ) {
 					return i18n.__n.apply( i18n, arguments );
