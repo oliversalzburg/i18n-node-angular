@@ -85,7 +85,7 @@
 							while( service._deferredStack.length ) {
 								service._deferredStack.pop().reject( error );
 							}
-						});
+						} );
 					}
 
 					return this._localeLoadedDeferred.promise;
@@ -300,6 +300,10 @@
 			 */
 			function isNumber( n ) {
 				return !isNaN( parseFloat( n ) ) && isFinite( n );
+			}
+
+			if( !arguments ) {
+				return "";
 			}
 
 			var filter = function( input ) {
