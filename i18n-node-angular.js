@@ -303,7 +303,8 @@
 			}
 
 			var filter = function( input ) {
-				if( !arguments ) {
+				// The first argument MUST be a literal, otherwise nothing can be translated.
+				if( !arguments || !arguments.length || typeof arguments[ 0 ] === "undefined" ) {
 					return "";
 				}
 
