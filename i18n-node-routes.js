@@ -49,7 +49,10 @@ var configure = function( app, configObject ) {
 
 	// Register routes
 	app.get( "/i18n/:locale", i18nRoutes.i18n );
-	app.get( "/i18n/:locale/:phrase", i18nRoutes.translate );
+
+	if( process.env.NODE_ENV === "development" ) {
+		app.get( "/i18n/:locale/:phrase", i18nRoutes.translate );
+	}
 };
 
 /**
