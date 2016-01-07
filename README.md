@@ -19,6 +19,9 @@ The solution is available in npm and bower packages for the backend and frontend
 
 2. ...register the express extensions:
 
+    > Note: Up until 1.4.0 it was always possible to add previously unknown translation literals to the translation files. This is no longer supported due to security implications.  
+      The feature is only available in development environments where `NODE_ENV` is set to `development`.
+
 	```javascript
     var i18n = require( "i18n" );
     var i18nRoutes = require( "i18n-node-angular" );
