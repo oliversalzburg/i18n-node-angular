@@ -70,7 +70,7 @@
 							url    : "/i18n/" + locale,
 							cache  : true
 						} ).then( function( translations ) {
-							$rootScope.i18n = translations;
+							$rootScope.i18n = translations.data;
 							service.loaded = true;
 							service._localeLoadedDeferred.resolve( $rootScope.i18n );
 
@@ -151,7 +151,7 @@
 						// The term is very unlikely to be actually translated now, as it was most
 						// likely previously unknown in the users locale, but, hey.
 						$http.get( "/i18n/" + this.userLanguage + "/" + encodeURIComponent( name ) ).then( function( translated ) {
-							$rootScope.i18n[ name ] = translated;
+							$rootScope.i18n[ name ] = translated.data;
 						} );
 					}
 
@@ -204,7 +204,7 @@
 							encodeURIComponent( count );
 
 						$http.get( requestUri ).then( function( translated ) {
-							$rootScope.i18n[ singular ] = translated;
+							$rootScope.i18n[ singular ] = translated.data;
 						} );
 					}
 
