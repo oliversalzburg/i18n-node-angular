@@ -1,6 +1,6 @@
 {
   "name": "i18n-node-angular",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "express routes for i18n-node-angular",
   "main": "i18n-node-routes.js",
   "homepage": "https://github.com/oliversalzburg/i18n-node-angular",
