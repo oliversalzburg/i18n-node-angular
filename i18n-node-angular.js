@@ -69,7 +69,7 @@
 							method : "get",
 							url    : "/i18n/" + locale,
 							cache  : true
-						} ).success( function( translations ) {
+						} ).then( function( translations ) {
 							$rootScope.i18n = translations;
 							service.loaded = true;
 							service._localeLoadedDeferred.resolve( $rootScope.i18n );
@@ -79,7 +79,7 @@
 							}
 
 							$rootScope.$broadcast( "LOCALE_UPDATED" );
-						} ).error( function( error ) {
+						} ).catch( function( error ) {
 							service._localeLoadedDeferred.reject( error );
 
 							while( service._deferredStack.length ) {
@@ -150,7 +150,7 @@
 						// Additionally, store the returned, translated term in the translation table.
 						// The term is very unlikely to be actually translated now, as it was most
 						// likely previously unknown in the users locale, but, hey.
-						$http.get( "/i18n/" + this.userLanguage + "/" + encodeURIComponent( name ) ).success( function( translated ) {
+						$http.get( "/i18n/" + this.userLanguage + "/" + encodeURIComponent( name ) ).then( function( translated ) {
 							$rootScope.i18n[ name ] = translated;
 						} );
 					}
@@ -203,7 +203,7 @@
 							"&count=" +
 							encodeURIComponent( count );
 
-						$http.get( requestUri ).success( function( translated ) {
+						$http.get( requestUri ).then( function( translated ) {
 							$rootScope.i18n[ singular ] = translated;
 						} );
 					}
