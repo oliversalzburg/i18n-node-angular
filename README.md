@@ -1,5 +1,8 @@
 # i18n-node in an AngularJS application
 
+> [!CAUTION]
+> This was an incredibly useful, and fun project to work on during the early times of NodeJS and AngularJS. Today, this project hopefully has no purpose anymore and is officially **archived as of 30-07-2024**.
+
 ## The problem
 I have an application that uses Node and express. I use [i18n-node](https://github.com/mashpie/i18n-node) for internationalization.
 
